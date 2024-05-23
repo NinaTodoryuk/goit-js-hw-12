@@ -1,3 +1,29 @@
+
+/**
+  |============================
+  | include css partials with
+  | default @import url()
+  |============================
+*/
+@import url('./reset.css');
+@import url('./vite-promo.css');
+@import url('./header.css');
+
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color: #242424;
+  background-color: rgba(255, 255, 255, 0.87);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
 /**
   |============================
   | include css partials with
@@ -97,10 +123,11 @@
       }
       
   .position {
-    position: fixed;
-    top: 50%;
+       position: relative;
     left: 50%;
     transform: translate(-50%, -50%);
+    margin: auto;
+    margin-top: 30px;
 }
 
 .loader {
@@ -133,6 +160,11 @@
  border-radius: 4px;
 width: 272px;
 height: 40px;
+text-align: center;
+}
+
+.search-input::placeholder {
+  color:#0d0d0d;
 }
 
 .search-btn {
@@ -142,6 +174,11 @@ width: 91px;
 height: 40px;
 background: #4e75ff;
 border: none;
+color: #fff;
+}
+
+button:hover {
+  background: #6c8cff;
 }
 
 ul {
@@ -154,6 +191,15 @@ ul {
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
+}
+
+.zoom-on-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.zoom-on-hover:hover {
+  transform: scale(1.15);
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
 }
 
 .photo-container {
@@ -173,4 +219,22 @@ ul {
 .photo {
     height: 200px;
     width: 360px;
+}
+
+
+ .photo-btn {
+    border-radius: 8px;
+    padding: 8px 16px;
+    height: 40px;
+    background: #4e75ff;
+    border: none;
+    display: flex;
+    align-items: center;
+        margin: auto;
+    margin-top: 32px;
+    color: #fff;
+}  
+
+.is-hidden-btn {
+    display: none;
 }
