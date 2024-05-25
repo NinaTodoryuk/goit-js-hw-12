@@ -15,15 +15,17 @@ let page = 1;
 let limit = 15
 let currentSearchQuery = ''; 
 
-
-function showLoadMoreButton() {
-  fetchPhotosButton.classList.remove('is-hidden-btn');
-}
-
+// Ховаємо кнопку
 function hideLoadMoreButton() {
   fetchPhotosButton.classList.add('is-hidden-btn');
 }
 
+// Показуємо кнопку
+function showLoadMoreButton() {
+  fetchPhotosButton.classList.remove('is-hidden-btn');
+}
+
+// грузимо та відображаєм фото
 async function fetchAndDisplayPhotos(searchQuery, pageNumber) {
   loaderEl.classList.remove('is-hidden');
   try {
@@ -36,7 +38,8 @@ async function fetchAndDisplayPhotos(searchQuery, pageNumber) {
       hideLoadMoreButton();
       fetchPhotosButton.removeEventListener('click', onLoadMore);
     } else {
-      imgContainer.innerHTML += createMarkup(imagesData.hits);
+      // додаємо нові зображення
+      imgContainer.insertAdjacentHTML('beforeend', createMarkup(imagesData.hits));
    
       const lightbox = new SimpleLightbox('.gallery a', {
         captionsData: 'alt',
@@ -56,12 +59,15 @@ const totalLoadedImages = pageNumber * limit;
       }
     }
   } catch (error) {
-    console.log(error);
+    iziToast.error({
+      message: 'An error occurred while fetching photos. Please try again later.'
+    });
   } finally {
     loaderEl.classList.add('is-hidden');
   }
 }
 
+// клік на кнопку "Load More"
 async function onLoadMore() {
   page++;
   await fetchAndDisplayPhotos(currentSearchQuery, page);
@@ -70,29 +76,41 @@ async function onLoadMore() {
 
 fetchPhotosButton.addEventListener('click', onLoadMore);
 
+// пошук
 async function onSearch(event) {
   event.preventDefault();
   const searchQuery = event.target.elements.searchKeyword.value.trim();
   imgContainer.innerHTML = '';
+
+  // якщо порожній пошуковий запит
   if (searchQuery === '') {
     hideLoadMoreButton();
     fetchPhotosButton.removeEventListener('click', onLoadMore);
     return iziToast.error({
       message:
-        'Sorry, there are no images matching your search query. Please try again!',
+      'Please enter a search query before searching!',
     });
-
   }
-  currentSearchQuery = searchQuery; 
+
   loaderEl.classList.remove('is-hidden');
 
   try {
     page = 1; 
     await fetchAndDisplayPhotos(searchQuery, page);
-   
+
+    //якщо без результатів
+if (imgContainer.innerHTML === '') {
+  hideLoadMoreButton();
+  fetchPhotosButton.removeEventListener('click', onLoadMore);
+  return iziToast.error({
+    message: 'Sorry, there are no images matching your search query. Please try again!',
+  });
+}
   } catch (error) {
-    console.log(error);
-  } finally {
+    iziToast.error({
+      message: 'An error occurred while performing the search. Please try again later.',
+    })
+    } finally {
     event.target.reset();
     loaderEl.classList.add('is-hidden');
   }
@@ -100,7 +118,7 @@ async function onSearch(event) {
 
 searchForm.addEventListener('submit', onSearch);
 
-
+//Прокручування сторінки
 function scrollPage() {
   const { height: cardHeight } = document
     .querySelector('.photo-container')
