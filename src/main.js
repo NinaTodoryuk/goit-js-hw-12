@@ -91,25 +91,17 @@ async function onSearch(event) {
       'Please enter a search query before searching!',
     });
   }
-
+ 
+  currentSearchQuery = searchQuery; // зберігаєм поточний пошуковий запит
   loaderEl.classList.remove('is-hidden');
 
   try {
     page = 1; 
     await fetchAndDisplayPhotos(searchQuery, page);
-
-    //якщо без результатів
-if (imgContainer.innerHTML === '') {
-  hideLoadMoreButton();
-  fetchPhotosButton.removeEventListener('click', onLoadMore);
-  return iziToast.error({
-    message: 'Sorry, there are no images matching your search query. Please try again!',
-  });
-}
   } catch (error) {
     iziToast.error({
       message: 'An error occurred while performing the search. Please try again later.',
-    })
+    });
     } finally {
     event.target.reset();
     loaderEl.classList.add('is-hidden');
